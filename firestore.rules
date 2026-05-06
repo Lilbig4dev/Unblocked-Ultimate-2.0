@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isVerified() {
+      return isSignedIn() && (request.auth.token.email_verified == true || request.auth.token.firebase.sign_in_provider == 'google.com');
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Entities ---
+    
+    // User Profile
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'createdAt', 'updatedAt']) &&
+             data.uid is string &&
+             (data.get('email', null) == null || data.get('email', null) is string) &&
+             (data.get('displayName', null) == null || (data.get('displayName', null) is string && data.get('displayName', null).size() <= 100)) &&
+             (data.get('username', null) == null || (data.get('username', null) is string && data.get('username', null).size() <= 64 && data.get('username', null).matches('^[a-zA-Z0-9_]+$'))) &&
+             (data.get('password', null) == null || (data.get('password', null) is string && data.get('password', null).size() <= 128)) &&
+             (data.get('photoURL', null) == null || data.get('photoURL', null) is string);
+    }
+
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if false;
+      
+      allow create: if isOwner(userId) && 
+                      isVerified() &&
+                      isValidId(userId) && 
+                      isValidUser(incoming()) &&
+                      incoming().uid == userId &&
+                      incoming().createdAt == request.time &&
+                      incoming().updatedAt == request.time;
+      
+      allow update: if isOwner(userId) && 
+                      isVerified() &&
+                      isValidUser(incoming()) &&
+                      incoming().uid == userId &&
+                      incoming().createdAt == existing().createdAt &&
+                      incoming().updatedAt == request.time &&
+                      (
+                        // Action: Complete profile (username/password/etc)
+                        incoming().diff(existing()).affectedKeys().hasOnly(['username', 'password', 'displayName', 'photoURL', 'updatedAt'])
+                      );
+    }
+  }
+}
