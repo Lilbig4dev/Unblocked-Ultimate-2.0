@@ -10,7 +10,7 @@
     "clean": "rm -rf dist",
     "lint": "eslint .",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "vite build --base=/Unblocked-Ultimate-2.0/ && gh-pages -d dist"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

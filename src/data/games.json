@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "slope",
+    "title": "Slope",
+    "description": "Navigate a ball through a 3D obstacle course in this high-speed physics game.",
+    "thumbnail": "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop",
+    "iframeUrl": "https://slope.googleai.example",
+    "category": "action",
+    "tags": ["physics", "3d", "speed"]
+  }
+]
