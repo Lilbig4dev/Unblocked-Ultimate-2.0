@@ -43,6 +43,8 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
 
+  console.log("App Rendering...");
+
   const categories = [
     { id: "all", label: "All Games", icon: LayoutDashboard },
     { id: "action", label: "Action", icon: Sword },
@@ -135,7 +137,7 @@ export default function App() {
   }, [searchQuery, selectedCategory]);
 
   return (
-    <div className="flex h-screen bg-transparent text-foreground overflow-hidden font-sans" style={{ backgroundColor: 'transparent' }}>
+    <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans">
       {/* Sidebar */}
       <aside className="w-64 border-r border-border bg-card/40 backdrop-blur-xl hidden md:flex flex-col">
         <div className="p-6 flex items-center gap-2">
