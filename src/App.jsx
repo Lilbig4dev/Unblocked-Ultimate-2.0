@@ -43,8 +43,6 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
 
-  console.log("App Rendering...");
-
   const categories = [
     { id: "all", label: "All Games", icon: LayoutDashboard },
     { id: "action", label: "Action", icon: Sword },
