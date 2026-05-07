@@ -10,7 +10,8 @@
     "clean": "rm -rf dist",
     "lint": "eslint .",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "deploy:firebase": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "firebase-tools": "^15.17.0",
     "tailwindcss": "^4.1.14",
     "vite": "^6.2.3"
   }
