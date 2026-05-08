@@ -49,7 +49,6 @@ service cloud.firestore {
       allow list: if false;
       
       allow create: if isOwner(userId) && 
-                      isVerified() &&
                       isValidId(userId) && 
                       isValidUser(incoming()) &&
                       incoming().uid == userId &&
@@ -57,7 +56,6 @@ service cloud.firestore {
                       incoming().updatedAt == request.time;
       
       allow update: if isOwner(userId) && 
-                      isVerified() &&
                       isValidUser(incoming()) &&
                       incoming().uid == userId &&
                       incoming().createdAt == existing().createdAt &&

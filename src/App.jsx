@@ -53,34 +53,48 @@ export default function App() {
     { id: "simulator", label: "Simulators", icon: History },
     { id: "sports", label: "Sports", icon: Trophy },
   ];
+  // Auth States
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState("signin"); // signin, signup
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authDisplayName, setAuthDisplayName] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [authLoading, setAuthLoading] = useState(false);
+
   const [userProfile, setUserProfile] = useState(null);
   const [showProfileSetup, setShowProfileSetup] = useState(false);
 
   // Profile Setup State
   const [newUsername, setNewUsername] = useState("");
-  const [newPassword, setNewPassword] = useState(""); // User requested password field
+  const [newPassword, setNewPassword] = useState("");
   const [setupLoading, setSetupLoading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        const profile = await getUserProfile(firebaseUser.uid);
-        if (profile) {
-          setUserProfile(profile);
-          if (!profile.username) {
+        try {
+          const profile = await getUserProfile(firebaseUser.uid);
+          if (profile) {
+            setUserProfile(profile);
+            if (!profile.username) {
+              setShowProfileSetup(true);
+            }
+          } else {
+            // New user from Google
+            const newProfile = {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              displayName: firebaseUser.displayName,
+              photoURL: firebaseUser.photoURL,
+            };
+            await createUserProfile(firebaseUser.uid, newProfile);
+            setUserProfile(newProfile);
             setShowProfileSetup(true);
           }
-        } else {
-          // New user
-          const newProfile = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            displayName: firebaseUser.displayName,
-            photoURL: firebaseUser.photoURL,
-          };
-          await createUserProfile(firebaseUser.uid, newProfile);
-          setUserProfile(newProfile);
-          setShowProfileSetup(true);
+          setShowAuthModal(false);
+        } catch (error) {
+          console.error("Error fetching/creating profile", error);
         }
       } else {
         setUserProfile(null);
@@ -93,10 +107,47 @@ export default function App() {
   }, []);
 
   const handleSignIn = async () => {
+    setShowAuthModal(true);
+  };
+
+  const handleGoogleSignIn = async () => {
+    setAuthLoading(true);
+    setAuthError("");
     try {
       await signInWithGoogle();
+      setShowAuthModal(false);
     } catch (error) {
-      console.error("Sign in failed", error);
+      console.error("Google sign in failed", error);
+      setAuthError(error.message);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleEmailAuth = async (e) => {
+    e.preventDefault();
+    setAuthLoading(true);
+    setAuthError("");
+    try {
+      if (authMode === "signup") {
+        await signUpWithEmail(authEmail, authPassword, authDisplayName);
+      } else {
+        await signInWithEmail(authEmail, authPassword);
+      }
+      setShowAuthModal(false);
+    } catch (error) {
+      console.error("Email auth failed", error);
+      if (error.code === 'auth/email-already-in-use') {
+        setAuthError("This email is already registered. Please sign in instead.");
+      } else if (error.code === 'auth/invalid-credential') {
+        setAuthError("Invalid email or password.");
+      } else if (error.code === 'auth/weak-password') {
+        setAuthError("Password should be at least 6 characters.");
+      } else {
+        setAuthError(error.message);
+      }
+    } finally {
+      setAuthLoading(false);
     }
   };
 
@@ -308,6 +359,126 @@ export default function App() {
       </main>
 
       {/* Modal Player */}
+      <AnimatePresence>
+        {showAuthModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="w-full max-w-md glass p-8 rounded-2xl border border-primary/20 space-y-6 relative"
+            >
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="absolute right-4 top-4" 
+                onClick={() => setShowAuthModal(false)}
+              >
+                <LogOut className="w-4 h-4" rotate={180} />
+              </Button>
+
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                  <User className="text-primary w-6 h-6" />
+                </div>
+                <h2 className="text-2xl font-bold font-mono tracking-tighter uppercase italic">
+                  {authMode === "signin" ? "System Access" : "Create Identity"}
+                </h2>
+                <p className="text-xs text-muted-foreground font-mono uppercase">
+                  {authMode === "signin" ? "Enter your credentials to engage." : "Register a new operative identity."}
+                </p>
+              </div>
+
+              {authError && (
+                <div className="bg-destructive/10 border border-destructive/20 text-destructive text-[10px] font-mono p-3 rounded-lg flex items-start gap-2">
+                  <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" />
+                  <p className="uppercase">{authError}</p>
+                </div>
+              )}
+
+              <form onSubmit={handleEmailAuth} className="space-y-4">
+                {authMode === "signup" && (
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-mono uppercase text-muted-foreground px-1">Display Name</label>
+                    <Input 
+                      placeholder="AGENT_NAME" 
+                      className="bg-muted/50 font-mono text-sm border-primary/10 focus:ring-primary/40"
+                      value={authDisplayName}
+                      onChange={(e) => setAuthDisplayName(e.target.value)}
+                      required
+                    />
+                  </div>
+                )}
+                
+                <div className="space-y-2">
+                  <label className="text-[10px] font-mono uppercase text-muted-foreground px-1">Email Address</label>
+                  <Input 
+                    type="email"
+                    placeholder="EMAIL_PROTOCOL" 
+                    className="bg-muted/50 font-mono text-sm border-primary/10 focus:ring-primary/40"
+                    value={authEmail}
+                    onChange={(e) => setAuthEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-mono uppercase text-muted-foreground px-1">Access Key</label>
+                  <Input 
+                    type="password"
+                    placeholder="••••••••" 
+                    className="bg-muted/50 font-mono text-sm border-primary/10 focus:ring-primary/40"
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <Button 
+                  type="submit" 
+                  disabled={authLoading}
+                  className="w-full font-mono uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 h-11"
+                >
+                  {authLoading ? <Loader2 className="w-4 h-4 animate-spin text-primary-foreground" /> : (authMode === "signin" ? "LOG IN" : "CREATE ACCOUNT")}
+                </Button>
+              </form>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-[10px] uppercase font-mono">
+                  <span className="bg-background px-2 text-muted-foreground italic">OR EXTERNAL PROVIDER</span>
+                </div>
+              </div>
+
+              <Button 
+                variant="outline" 
+                className="w-full font-mono uppercase tracking-widest gap-2 bg-transparent border-primary/30 hover:bg-primary/5 h-11"
+                onClick={handleGoogleSignIn}
+                disabled={authLoading}
+              >
+                <LogIn className="w-4 h-4" />
+                Sign In With Google
+              </Button>
+
+              <div className="text-center pt-2">
+                <button 
+                  onClick={() => setAuthMode(authMode === "signin" ? "signup" : "signin")}
+                  className="text-[10px] font-mono uppercase text-primary hover:underline italic tracking-tight"
+                >
+                  {authMode === "signin" ? "Need a new identity? register here" : "already have an identity? access here"}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Profile Setup Modal */}
       <AnimatePresence>
         {showProfileSetup && (
