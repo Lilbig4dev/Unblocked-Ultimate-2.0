@@ -102,6 +102,24 @@
     pointer-events: none;
     animation: bgPulse 10s ease-in-out infinite alternate;
   }
+
+  /* Custom Scrollbar Utilities */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(0, 242, 255, 0.2);
+    border-radius: 10px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 242, 255, 0.4);
+  }
 }
 
 @layer utilities {

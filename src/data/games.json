@@ -1,11 +1,67 @@
 [
   {
-    "id": "slope",
-    "title": "Slope",
-    "description": "Navigate a ball through a 3D obstacle course in this high-speed physics game.",
-    "thumbnail": "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop",
-    "iframeUrl": "https://slope.googleai.example",
-    "category": "action",
-    "tags": ["physics", "3d", "speed"]
+    "id": "fnaf-1",
+    "title": "Five Nights at Freddy's 1",
+    "description": "The ultimate horror experience. Can you survive five nights?",
+    "thumbnail": "https://guardianacorn.com/wp-content/uploads/2017/10/title-screen1.jpg",
+    "iframeUrl": "/games/fnaf-1/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "survival",
+      "fnaf"
+    ]
+  },
+  {
+    "id": "fnaf-2",
+    "title": "Five Nights at Freddy's 2",
+    "description": "Double the horror, double the fun. Can you handle the new animatronics?",
+    "thumbnail": "https://lutris.net/media/games/screenshots/Five-Nights-at-Freddys-2-title-screen.jpg",
+    "iframeUrl": "/games/fnaf-2/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "survival",
+      "fnaf"
+    ]
+  },
+  {
+    "id": "fnaf-3",
+    "title": "Five Nights at Freddy's 3",
+    "description": "Thirty years after Freddy Fazbear's Pizza closed its doors, the horror returns.",
+    "thumbnail": "https://assets1.ignimgs.com/2020/02/04/five-nights-at-freddys-3---button-2020-1580781479018.jpg",
+    "iframeUrl": "/games/fnaf-3/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "survival",
+      "fnaf"
+    ]
+  },
+  {
+    "id": "fnaf-4",
+    "title": "Five Nights at Freddy's 4",
+    "description": "The final chapter of the original story. The horror follows you home.",
+    "thumbnail": "https://tse2.mm.bing.net/th/id/OIP.FQBfMq9Y3PMCGyw_kC6HlgHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "iframeUrl": "/games/fnaf-4/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "survival",
+      "fnaf"
+    ]
+  },
+  {
+    "id": "big-e",
+    "title": "Five Night's at BIG E",
+    "description": "A survival horror game. Can you survive the nights with BIG E?",
+    "thumbnail": "https://tse4.mm.bing.net/th/id/OIP.cgeH9gR5-LCVkePTO-qRLgHaHt?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "iframeUrl": "/games/big-e/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "survival",
+      "fan-game"
+    ]
   }
 ]

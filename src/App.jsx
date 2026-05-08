@@ -44,11 +44,14 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   const categories = [
-    { id: "all", label: "All Games", icon: LayoutDashboard },
+    { id: "all", label: "All Assets", icon: LayoutDashboard },
     { id: "action", label: "Action", icon: Sword },
-    { id: "puzzle", label: "Puzzle", icon: Puzzle },
+    { id: "horror", label: "Horror", icon: ShieldCheck },
+    { id: "sandbox", label: "Sandbox", icon: Puzzle },
     { id: "driving", label: "Driving", icon: Car },
-    { id: "classic", label: "Classic", icon: Dices },
+    { id: "app", label: "Apps/Media", icon: Settings },
+    { id: "simulator", label: "Simulators", icon: History },
+    { id: "sports", label: "Sports", icon: Trophy },
   ];
   const [userProfile, setUserProfile] = useState(null);
   const [showProfileSetup, setShowProfileSetup] = useState(false);
@@ -142,10 +145,10 @@ export default function App() {
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
             <Gamepad2 className="text-primary-foreground w-5 h-5" />
           </div>
-          <h1 className="font-bold text-xl tracking-tighter uppercase font-mono italic">ULTIMATE 2<span className="text-primary">.0</span></h1>
+          <h1 className="font-bold text-xl tracking-tighter uppercase font-mono italic">ULTIMATE 3<span className="text-primary">.0</span></h1>
         </div>
 
-        <ScrollArea className="flex-1 px-4">
+        <div className="flex-1 px-4 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
           <div className="space-y-4 py-4">
             <div className="px-3 py-2">
               <h2 className="mb-2 px-4 text-xs font-mono uppercase tracking-widest text-muted-foreground">Command Center</h2>
@@ -180,7 +183,7 @@ export default function App() {
               </div>
             </div>
           </div>
-        </ScrollArea>
+        </div>
 
         <div className="p-4 border-t border-border mt-auto">
           <Button variant="ghost" className="w-full justify-start gap-2 font-mono text-xs uppercase">
@@ -197,7 +200,7 @@ export default function App() {
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder="SEARCH PROTOCOL (ex. 'Slope')..."
+              placeholder="SEARCH PROTOCOL (ex. 'Doom')..."
               className="pl-10 bg-muted/30 border-border focus:ring-primary/50 font-mono text-xs uppercase h-9"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -242,7 +245,7 @@ export default function App() {
         </header>
 
         {/* Content Area */}
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
           <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8">
             {/* Hero Splash */}
             <motion.div 
@@ -255,10 +258,10 @@ export default function App() {
                </div>
                <div className="relative z-1">
                   <Badge className="mb-2 bg-primary/20 text-primary border-primary/50 backdrop-blur-md text-[10px] uppercase font-mono">
-                     ULTIMATE CORE v2.0.1
+                     ULTIMATE CORE v3.0.4 - MEGA PACK
                   </Badge>
                   <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-mono mb-2">
-                     UNBLOCKED ULTIMATE<span className="text-primary italic animate-pulse"> 2.0</span>
+                     UNBLOCKED ULTIMATE<span className="text-primary italic animate-pulse"> 3.0</span>
                   </h1>
                   <p className="text-muted-foreground text-xs md:text-sm font-mono max-w-lg uppercase">
                      The next generation of unblocked access. 
@@ -304,7 +307,7 @@ export default function App() {
                )}
             </div>
           </div>
-        </ScrollArea>
+        </div>
       </main>
 
       {/* Modal Player */}
