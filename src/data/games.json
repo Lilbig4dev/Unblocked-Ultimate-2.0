@@ -63,5 +63,161 @@
       "survival",
       "fan-game"
     ]
+  },
+  {
+    "id": "talking-ben",
+    "title": "Talking Ben",
+    "description": "Have fun with Talking Ben, the retired chemistry professor who likes his quiet comfortable life.",
+    "thumbnail": "https://freeappsforme.com/wp-content/uploads/2020/10/Talking-Ben-1536x1497.jpg",
+    "iframeUrl": "/games/talking-ben/index.html",
+    "category": "simulator",
+    "tags": [
+      "talking",
+      "funny",
+      "simulator"
+    ]
+  },
+  {
+    "id": "geometry-dash",
+    "title": "Geometry Dash",
+    "description": "Jump and fly your way through danger in this rhythm-based action platformer!",
+    "thumbnail": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/322170/header.jpg",
+    "iframeUrl": "/games/geometry-dash/index.html",
+    "category": "action",
+    "tags": [
+      "rhythm",
+      "platformer",
+      "hard"
+    ]
+  },
+  {
+    "id": "schoolboy-runaway",
+    "title": "SchoolBoy Runaway",
+    "description": "Try to escape from home and the watchful eyes of your parents in this stealth adventure.",
+    "thumbnail": "https://tse1.mm.bing.net/th/id/OIP.70Uff3YAEYxrdxxzgSH-jAHaKQ?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "iframeUrl": "/games/schoolboy-runaway/index.html",
+    "category": "action",
+    "tags": [
+      "stealth",
+      "escape",
+      "unity"
+    ]
+  },
+  {
+    "id": "sonic-exe",
+    "title": "Sonic.exe",
+    "description": "A twisted version of the classic Sonic game. Face the horror of Sonic.exe.",
+    "thumbnail": "https://tse4.mm.bing.net/th/id/OIP.yxsrTlUMcWsmVD7HtFQCgwHaFO?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "iframeUrl": "/games/sonic-exe/index.html",
+    "category": "horror",
+    "tags": [
+      "sonic",
+      "horror",
+      "creepypasta"
+    ]
+  },
+  {
+    "id": "fears-to-fathom",
+    "title": "Fears to Fathom: Home Alone",
+    "description": "An episodic psychological horror game where each episode reveals a short story narrated by the ones who survived.",
+    "thumbnail": "https://tse3.mm.bing.net/th/id/OIP.glw50TPSpBJuvl9p290WlgHaJ4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "iframeUrl": "/games/fears-to-fathom/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "psychological",
+      "survive"
+    ]
+  },
+  {
+    "id": "getting-over-it",
+    "title": "Getting Over It",
+    "description": "A game I made for a certain kind of person. To hurt them.",
+    "thumbnail": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/240720/header.jpg",
+    "iframeUrl": "/games/getting-over-it/index.html",
+    "category": "action",
+    "tags": [
+      "hard",
+      "physics",
+      "platformer"
+    ]
+  },
+  {
+    "id": "bendy",
+    "title": "Bendy and the Ink Machine",
+    "description": "A first-person puzzle-action-horror game with a unique cartoon atmosphere.",
+    "thumbnail": "https://tse3.mm.bing.net/th/id/OIP.q-Y5IkR4w1FbhTJezhuFmQHaOj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "iframeUrl": "/games/bendy/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "puzzle",
+      "cartoon"
+    ]
+  },
+  {
+    "id": "amanda-the-adventurer",
+    "title": "Amanda The Adventurer",
+    "description": "Join Amanda and her pal Wooly on a series of adventures as they explore and learn all about our wonderful world!",
+    "thumbnail": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2166060/header.jpg",
+    "iframeUrl": "/games/amanda-the-adventurer/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "mystery",
+      "puzzle"
+    ]
+  },
+  {
+    "id": "baldi-plus",
+    "title": "Baldi's Basics Plus",
+    "description": "Baldi's Basics Plus is a survival horror roguelite where you have to escape a school building.",
+    "thumbnail": "https://tse3.mm.bing.net/th/id/OIP.uJmH7Imm06Yn49XYtm4XlAHaEK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "iframeUrl": "/games/baldi-plus/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "roguelite",
+      "funny"
+    ]
+  },
+  {
+    "id": "baldi-remastered",
+    "title": "Baldi Remastered",
+    "description": "Classic Baldi experience remastered for modern browsers.",
+    "thumbnail": "https://tse3.mm.bing.net/th/id/OIP.PyFyre0ToX7Cg-2U7sjd1AHaEo?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "iframeUrl": "/games/baldi-remastered/index.html",
+    "category": "horror",
+    "tags": [
+      "horror",
+      "classic",
+      "remastered"
+    ]
+  },
+  {
+    "id": "buckshot-roulette",
+    "title": "Buckshot Roulette",
+    "description": "Play Russian roulette with a 12-gauge shotgun. Enter the underground club and face the dealer.",
+    "thumbnail": "https://static0.hardcoregamerimages.com/wordpress/wp-content/uploads/sharedimages/2024/04/buckshot-roulette.jpg",
+    "iframeUrl": "/games/buckshot-roulette/index.html",
+    "category": "action",
+    "tags": [
+      "horror",
+      "luck",
+      "action"
+    ]
+  },
+  {
+    "id": "vice-city",
+    "title": "GTA Vice City",
+    "description": "The legendary Grand Theft Auto: Vice City, playable in your browser.",
+    "thumbnail": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/12110/header.jpg",
+    "iframeUrl": "/games/vice-city/index.html",
+    "category": "action",
+    "tags": [
+      "open-world",
+      "action",
+      "classic"
+    ]
   }
 ]

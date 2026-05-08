@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/buckshot-roulette/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <title>Buckshot Roulette</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+        #canvas { width: 100%; height: 100%; }
+        #loading-text { color: white; font-size: 24px; font-family: cursive; text-align: center; margin-top: 20px; position: absolute; width: 100%; z-index: 10; }
+    </style>
+</head>
+<body>
+    <script src="main.js"></script>
+    <div id="loading-text">LOADING...</div>
+    <canvas id="canvas"></canvas>
+    <script src="buckshot-roulette.js"></script>
+    <script>
+        const GODOT_CONFIG = {
+            "args": [],
+            "canvasResizePolicy": 2,
+            "ensureCrossOriginIsolationHeaders": false,
+            "executable": "buckshot-roulette",
+            "fileSizes": { "buckshot-roulette.pck": 344705792, "buckshot-roulette.wasm": 43444261 },
+            "focusCanvas": false
+        };
+        const engine = new Engine(GODOT_CONFIG);
+        document.getElementById('loading-text').remove();
+        engine.startGame();
+    </script>
+</body>
+</html>

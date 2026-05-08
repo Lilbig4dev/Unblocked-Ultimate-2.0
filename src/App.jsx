@@ -22,7 +22,7 @@ import {
   LogOut,
   User,
   ShieldCheck,
-  Loader2
+  Loader2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
@@ -42,6 +42,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [activeView, setActiveView] = useState("home");
 
   const categories = [
     { id: "all", label: "All Assets", icon: LayoutDashboard },
@@ -196,7 +197,7 @@ export default function App() {
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
             <Gamepad2 className="text-primary-foreground w-5 h-5" />
           </div>
-          <h1 className="font-bold text-xl tracking-tighter uppercase font-mono italic">ULTIMATE 2<span className="text-primary">.0</span></h1>
+          <h1 className="font-bold text-xl tracking-tighter uppercase font-mono italic">ULTIMATE 2<span className="text-primary text-sm">.0</span></h1>
         </div>
 
         <div className="flex-1 px-4 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
@@ -204,12 +205,31 @@ export default function App() {
             <div className="px-3 py-2">
               <h2 className="mb-2 px-4 text-xs font-mono uppercase tracking-widest text-muted-foreground">Command Center</h2>
               <div className="space-y-1">
+                <Button
+                  variant={activeView === "home" ? "secondary" : "ghost"}
+                  className={`w-full justify-start gap-2 font-mono text-xs uppercase tracking-tight ${activeView === "home" ? 'text-primary' : ''}`}
+                  onClick={() => setActiveView("home")}
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  Terminal Home
+                </Button>
+              </div>
+            </div>
+
+            <Separator className="bg-border/50" />
+
+            <div className="px-3 py-2">
+              <h2 className="mb-2 px-4 text-xs font-mono uppercase tracking-widest text-muted-foreground">Asset Filters</h2>
+              <div className="space-y-1">
                 {categories.map((category) => (
                   <Button
                     key={category.id}
-                    variant={selectedCategory === category.id ? "secondary" : "ghost"}
-                    className={`w-full justify-start gap-2 font-mono text-xs uppercase tracking-tight ${selectedCategory === category.id ? 'text-primary' : ''}`}
-                    onClick={() => setSelectedCategory(category.id)}
+                    variant={selectedCategory === category.id && activeView === "home" ? "secondary" : "ghost"}
+                    className={`w-full justify-start gap-2 font-mono text-xs uppercase tracking-tight ${selectedCategory === category.id && activeView === "home" ? 'text-primary' : ''}`}
+                    onClick={() => {
+                      setSelectedCategory(category.id);
+                      setActiveView("home");
+                    }}
                   >
                     <category.icon className="w-4 h-4" />
                     {category.label}
@@ -217,8 +237,6 @@ export default function App() {
                 ))}
               </div>
             </div>
-
-            <Separator className="bg-border/50" />
 
             <div className="px-3 py-2">
               <h2 className="mb-2 px-4 text-xs font-mono uppercase tracking-widest text-muted-foreground">My List</h2>
@@ -251,8 +269,8 @@ export default function App() {
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder="SEARCH PROTOCOL (ex. 'Doom')..."
-              className="pl-10 bg-muted/30 border-border focus:ring-primary/50 font-mono text-xs uppercase h-9"
+              placeholder="SEARCH PROTOCOLS (ex. 'Minecraft')..."
+              className="pl-10 bg-muted/30 border-border focus:ring-primary/50 font-mono text-xs h-9"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -297,63 +315,69 @@ export default function App() {
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
-          <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8">
-            {/* Hero Splash */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="relative h-48 md:h-64 rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 flex flex-col justify-end gap-2 group"
-            >
-               <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none transition-transform group-hover:scale-110 duration-700">
-                  <Gamepad2 className="w-32 h-32 text-primary" />
-               </div>
-               <div className="relative z-1">
-                  <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-mono mb-2">
-                     UNBLOCKED ULTIMATE<span className="text-primary italic animate-pulse"> 2.0</span>
-                  </h1>
-                  <p className="text-muted-foreground text-xs md:text-sm font-mono max-w-lg uppercase">
-                     The next generation of unblocked access. 
-                     Advanced protocols engaged. Pure performance.
-                  </p>
-               </div>
-            </motion.div>
+          <div className="p-6 md:p-8 max-w-7xl mx-auto h-full">
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key="home"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                className="space-y-8"
+              >
+                {/* Hero Splash */}
+                <div className="relative h-48 md:h-64 rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 flex flex-col justify-end gap-2 group">
+                  <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none transition-transform group-hover:scale-110 duration-700">
+                    <Gamepad2 className="w-32 h-32 text-primary" />
+                  </div>
+                  <div className="relative z-1">
+                    <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-mono mb-2">
+                      UNBLOCKED ULTIMATE<span className="text-primary italic animate-pulse"> 2.0</span>
+                    </h1>
+                    <p className="text-muted-foreground text-xs md:text-sm font-mono max-w-lg uppercase">
+                      The next generation of unblocked access. 
+                      Advanced protocols engaged. Pure performance.
+                    </p>
+                  </div>
+                </div>
 
-            {/* Grid */}
-            <div className="space-y-4">
-               <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold font-mono tracking-widest uppercase flex items-center gap-2">
-                     <span className="w-2 h-2 bg-primary rounded-full"></span>
-                     AVAILABLE ASSETS ({filteredGames.length})
-                  </h2>
-               </div>
+                {/* Grid */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-bold font-mono tracking-widest uppercase flex items-center gap-2">
+                      <span className="w-2 h-2 bg-primary rounded-full"></span>
+                      AVAILABLE ASSETS ({filteredGames.length})
+                    </h2>
+                  </div>
 
-               {filteredGames.length > 0 ? (
-                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                   {filteredGames.map((game, index) => (
-                     <motion.div
-                       key={game.id}
-                       initial={{ opacity: 0, y: 20 }}
-                       animate={{ opacity: 1, y: 0 }}
-                       transition={{ delay: index * 0.05 }}
-                     >
-                       <GameCard game={game} onSelect={setSelectedGame} />
-                     </motion.div>
-                   ))}
-                 </div>
-               ) : (
-                 <div className="flex flex-col items-center justify-center py-20 text-center opacity-40">
-                    <Search className="w-12 h-12 mb-4" />
-                    <p className="font-mono text-xs uppercase">No matching assets found in local database. </p>
-                    <Button 
-                      variant="link" 
-                      className="text-primary mt-2 uppercase text-[10px] font-mono"
-                      onClick={() => {setSearchQuery(""); setSelectedCategory("all");}}
-                    >
-                      Clear All Protocols
-                    </Button>
-                 </div>
-               )}
-            </div>
+                  {filteredGames.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {filteredGames.map((game, index) => (
+                        <motion.div
+                          key={game.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                        >
+                          <GameCard game={game} onSelect={setSelectedGame} />
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-20 text-center opacity-40">
+                      <Search className="w-12 h-12 mb-4" />
+                      <p className="font-mono text-xs uppercase">No matching assets found in local database. </p>
+                      <Button 
+                        variant="link" 
+                        className="text-primary mt-2 uppercase text-[10px] font-mono"
+                        onClick={() => {setSearchQuery(""); setSelectedCategory("all");}}
+                      >
+                        Clear All Protocols
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </main>
