@@ -145,7 +145,7 @@ export default function App() {
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
             <Gamepad2 className="text-primary-foreground w-5 h-5" />
           </div>
-          <h1 className="font-bold text-xl tracking-tighter uppercase font-mono italic">ULTIMATE 3<span className="text-primary">.0</span></h1>
+          <h1 className="font-bold text-xl tracking-tighter uppercase font-mono italic">ULTIMATE 2<span className="text-primary">.0</span></h1>
         </div>
 
         <div className="flex-1 px-4 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
@@ -257,11 +257,8 @@ export default function App() {
                   <Gamepad2 className="w-32 h-32 text-primary" />
                </div>
                <div className="relative z-1">
-                  <Badge className="mb-2 bg-primary/20 text-primary border-primary/50 backdrop-blur-md text-[10px] uppercase font-mono">
-                     ULTIMATE CORE v3.0.4 - MEGA PACK
-                  </Badge>
                   <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-mono mb-2">
-                     UNBLOCKED ULTIMATE<span className="text-primary italic animate-pulse"> 3.0</span>
+                     UNBLOCKED ULTIMATE<span className="text-primary italic animate-pulse"> 2.0</span>
                   </h1>
                   <p className="text-muted-foreground text-xs md:text-sm font-mono max-w-lg uppercase">
                      The next generation of unblocked access. 
