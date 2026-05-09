@@ -22,7 +22,7 @@ import {
   LogOut,
   User,
   ShieldCheck,
-  Loader2,
+  Loader2
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
@@ -31,7 +31,9 @@ import {
   logout, 
   getUserProfile, 
   createUserProfile, 
-  updateUserProfile
+  updateUserProfile,
+  incrementPlayTime,
+  getLeaderboard
 } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -43,6 +45,66 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState("home");
+  const [theme, setTheme] = useState(() => localStorage.getItem("scramjet-theme") || "galaxy");
+  const [leaderboardData, setLeaderboardData] = useState([]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("scramjet-theme", theme);
+  }, [theme]);
+
+  // Suppress Benign Vite WebSocket Errors and Unhandled Rejections
+  useEffect(() => {
+    const originalError = console.error;
+    const originalWarn = console.warn;
+    
+    const isViteError = (msg) => 
+      typeof msg === 'string' && (
+        msg.includes('[vite] failed to connect to websocket') || 
+        msg.includes('WebSocket closed without opened')
+      );
+
+    console.error = (...args) => {
+      if (isViteError(args[0])) return;
+      originalError.apply(console, args);
+    };
+
+    console.warn = (...args) => {
+      if (isViteError(args[0])) return;
+      originalWarn.apply(console, args);
+    };
+
+    const handleRejection = (event) => {
+      if (event.reason && isViteError(event.reason.message || event.reason)) {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener('unhandledrejection', handleRejection);
+    
+    return () => {
+      console.error = originalError;
+      console.warn = originalWarn;
+      window.removeEventListener('unhandledrejection', handleRejection);
+    };
+  }, []);
+
+  const themes = [
+    { id: "galaxy", label: "Galaxy", color: "#00f2ff" },
+    { id: "azure", label: "Blue", color: "#3b82f6" },
+    { id: "amber", label: "Orange", color: "#f59e0b" },
+    { id: "rose", label: "Pink", color: "#ec4899" },
+    { id: "crimson", label: "Red", color: "#ef4444" },
+    { id: "emerald", label: "Green", color: "#10b981" },
+    { id: "obsidian", label: "Black", color: "#18181b" },
+    { id: "frost", label: "White", color: "#ffffff" },
+    { id: "ultraviolet", label: "Violet", color: "#8b5cf6" },
+    { id: "gold", label: "Gold", color: "#fbbf24" },
+    { id: "midnight", label: "Midnight", color: "#000000" },
+    { id: "mint", label: "Mint", color: "#2dd4bf" },
+    { id: "blood", label: "Blood", color: "#7f1d1d" },
+    { id: "cyberpunk", label: "Cyber", color: "#fef08a" },
+  ];
 
   const categories = [
     { id: "all", label: "All Assets", icon: LayoutDashboard },
@@ -70,6 +132,40 @@ export default function App() {
   const [newUsername, setNewUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [setupLoading, setSetupLoading] = useState(false);
+
+  // Play Time Tracking logic
+  useEffect(() => {
+    if (!selectedGame || !userProfile) return;
+
+    let startTime = Date.now();
+    
+    const interval = setInterval(async () => {
+      const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+      if (elapsedSeconds >= 30) {
+        await incrementPlayTime(userProfile.uid, elapsedSeconds);
+        startTime = Date.now(); // reset start time for next increment
+      }
+    }, 30000); // Check every 30 seconds
+
+    return () => {
+      clearInterval(interval);
+      const finalElapsed = Math.floor((Date.now() - startTime) / 1000);
+      if (finalElapsed > 0) {
+        incrementPlayTime(userProfile.uid, finalElapsed);
+      }
+    };
+  }, [selectedGame, userProfile?.uid]);
+
+  // Fetch leaderboard
+  useEffect(() => {
+    if (activeView === "leaderboard") {
+      const fetchLeaderboard = async () => {
+        const data = await getLeaderboard();
+        setLeaderboardData(data);
+      };
+      fetchLeaderboard();
+    }
+  }, [activeView]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -213,6 +309,14 @@ export default function App() {
                   <LayoutDashboard className="w-4 h-4" />
                   Terminal Home
                 </Button>
+                <Button
+                  variant={activeView === "leaderboard" ? "secondary" : "ghost"}
+                  className={`w-full justify-start gap-2 font-mono text-xs uppercase tracking-tight ${activeView === "leaderboard" ? 'text-primary' : ''}`}
+                  onClick={() => setActiveView("leaderboard")}
+                >
+                  <Trophy className="w-4 h-4" />
+                  Hall of Fame
+                </Button>
               </div>
             </div>
 
@@ -254,7 +358,25 @@ export default function App() {
           </div>
         </div>
 
-        <div className="p-4 border-t border-border mt-auto">
+        <div className="p-4 border-t border-border mt-auto space-y-4">
+          <div>
+            <h2 className="mb-2 px-4 text-[9px] font-mono uppercase tracking-widest text-muted-foreground flex items-center justify-between">
+              Core Theme
+              <Badge variant="outline" className="text-[7px] h-3 px-1 border-primary/20 text-primary uppercase">{theme}</Badge>
+            </h2>
+            <div className="grid grid-cols-7 gap-1 px-4">
+              {themes.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setTheme(t.id)}
+                  title={t.label}
+                  className={`w-full aspect-square rounded-sm border transition-all hover:scale-110 ${theme === t.id ? 'border-primary ring-1 ring-primary ring-offset-1 ring-offset-black scale-110' : 'border-white/10 opacity-60 hover:opacity-100'}`}
+                  style={{ backgroundColor: t.color }}
+                />
+              ))}
+            </div>
+          </div>
+
           <Button variant="ghost" className="w-full justify-start gap-2 font-mono text-xs uppercase">
             <Settings className="w-4 h-4" />
             System Control
@@ -269,7 +391,7 @@ export default function App() {
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder="SEARCH PROTOCOLS (ex. 'Minecraft')..."
+              placeholder="SEARCH PROTOCOLS (ex. 'Eaglercraft')..."
               className="pl-10 bg-muted/30 border-border focus:ring-primary/50 font-mono text-xs h-9"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -317,66 +439,139 @@ export default function App() {
         <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
           <div className="p-6 md:p-8 max-w-7xl mx-auto h-full">
             <AnimatePresence mode="wait">
-              <motion.div 
-                key="home"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="space-y-8"
-              >
-                {/* Hero Splash */}
-                <div className="relative h-48 md:h-64 rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 flex flex-col justify-end gap-2 group">
-                  <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none transition-transform group-hover:scale-110 duration-700">
-                    <Gamepad2 className="w-32 h-32 text-primary" />
-                  </div>
-                  <div className="relative z-1">
-                    <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-mono mb-2">
-                      UNBLOCKED ULTIMATE<span className="text-primary italic animate-pulse"> 2.0</span>
-                    </h1>
-                    <p className="text-muted-foreground text-xs md:text-sm font-mono max-w-lg uppercase">
-                      The next generation of unblocked access. 
-                      Advanced protocols engaged. Pure performance.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Grid */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-bold font-mono tracking-widest uppercase flex items-center gap-2">
-                      <span className="w-2 h-2 bg-primary rounded-full"></span>
-                      AVAILABLE ASSETS ({filteredGames.length})
-                    </h2>
-                  </div>
-
-                  {filteredGames.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {filteredGames.map((game, index) => (
-                        <motion.div
-                          key={game.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                        >
-                          <GameCard game={game} onSelect={setSelectedGame} />
-                        </motion.div>
-                      ))}
+                {activeView === "home" ? (
+                  <motion.div 
+                    key="home"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    className="space-y-8"
+                  >
+                    {/* Hero Splash */}
+                    <div className="relative h-48 md:h-64 rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 flex flex-col justify-end gap-2 group">
+                      <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none transition-transform group-hover:scale-110 duration-700">
+                        <Gamepad2 className="w-32 h-32 text-primary" />
+                      </div>
+                      <div className="relative z-1">
+                        <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-mono mb-2">
+                          UNBLOCKED ULTIMATE<span className="text-primary italic animate-pulse"> 2.0</span>
+                        </h1>
+                        <p className="text-muted-foreground text-xs md:text-sm font-mono max-w-lg uppercase">
+                          The next generation of unblocked access. 
+                          Advanced protocols engaged. Pure performance.
+                        </p>
+                      </div>
                     </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-20 text-center opacity-40">
-                      <Search className="w-12 h-12 mb-4" />
-                      <p className="font-mono text-xs uppercase">No matching assets found in local database. </p>
-                      <Button 
-                        variant="link" 
-                        className="text-primary mt-2 uppercase text-[10px] font-mono"
-                        onClick={() => {setSearchQuery(""); setSelectedCategory("all");}}
-                      >
-                        Clear All Protocols
-                      </Button>
+
+                    {/* Grid */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-bold font-mono tracking-widest uppercase flex items-center gap-2">
+                          <span className="w-2 h-2 bg-primary rounded-full"></span>
+                          AVAILABLE ASSETS ({filteredGames.length})
+                        </h2>
+                      </div>
+
+                      {filteredGames.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                          {filteredGames.map((game, index) => (
+                            <motion.div
+                              key={game.id}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                            >
+                              <GameCard game={game} onSelect={setSelectedGame} />
+                            </motion.div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-20 text-center opacity-40">
+                          <Search className="w-12 h-12 mb-4" />
+                          <p className="font-mono text-xs uppercase">No matching assets found in local database. </p>
+                          <Button 
+                            variant="link" 
+                            className="text-primary mt-2 uppercase text-[10px] font-mono"
+                            onClick={() => {setSearchQuery(""); setSelectedCategory("all");}}
+                          >
+                            Clear All Protocols
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </motion.div>
+                  </motion.div>
+                ) : activeView === "leaderboard" ? (
+                  <motion.div
+                    key="leaderboard"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="space-y-8"
+                  >
+                    <div className="relative h-48 md:h-64 rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 flex flex-col justify-end gap-2">
+                      <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
+                        <Trophy className="w-32 h-32 text-primary" />
+                      </div>
+                      <div className="relative z-1">
+                        <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic font-mono mb-2">
+                          HALL OF FAME
+                        </h1>
+                        <p className="text-muted-foreground text-xs md:text-sm font-mono max-w-lg uppercase">
+                          The most dedicated operatives in the system. 
+                          Ranked by total session duration.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="glass rounded-xl overflow-hidden border border-white/10">
+                      <div className="grid grid-cols-12 gap-4 p-4 border-b border-white/10 font-mono text-[10px] uppercase text-muted-foreground bg-white/5">
+                        <div className="col-span-1">Rank</div>
+                        <div className="col-span-6">Operative</div>
+                        <div className="col-span-5 text-right">Service Time</div>
+                      </div>
+                      
+                      <div className="divide-y divide-white/5">
+                        {leaderboardData.map((user, index) => (
+                          <div key={user.uid} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-white/5 transition-colors">
+                            <div className="col-span-1 font-mono text-xs font-bold text-primary">
+                              #{index + 1}
+                            </div>
+                            <div className="col-span-6 flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-muted border border-white/10 overflow-hidden shrink-0">
+                                {user.photoURL ? (
+                                  <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-primary/20 text-primary text-[10px] font-bold">
+                                    {(user.username || user.displayName || "?")[0].toUpperCase()}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="truncate">
+                                <p className="font-mono text-sm uppercase tracking-tight">{user.username || user.displayName || "Unknown Operative"}</p>
+                                <p className="text-[9px] font-mono text-muted-foreground uppercase opacity-50">{user.uid.slice(0, 8)}...</p>
+                              </div>
+                            </div>
+                            <div className="col-span-5 text-right">
+                              <p className="font-mono text-sm text-primary">
+                                {user.totalPlayTime ? Math.floor(user.totalPlayTime / 60) : 0} <span className="text-[10px] opacity-50">MINS</span>
+                              </p>
+                              <p className="text-[9px] font-mono text-muted-foreground uppercase">
+                                {user.totalPlayTime || 0} TOTAL SECONDS
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+
+                        {leaderboardData.length === 0 && (
+                          <div className="p-20 text-center opacity-30">
+                            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+                            <p className="font-mono text-xs uppercase">Synching leaderboard data...</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ) : null}
             </AnimatePresence>
           </div>
         </div>

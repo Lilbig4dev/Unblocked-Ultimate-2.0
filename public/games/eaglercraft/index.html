@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eaglercraft | AI Studio Relay</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background: #000; font-family: sans-serif; }
+        #game_frame { width: 100%; height: 100%; }
+        #loading { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #111; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+        .spinner { width: 40px; h: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #00ff00; border-radius: 50%; animate: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; font-family: monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Injecting Classes...</p>
+    </div>
+    <div id="game_frame"></div>
+
+    <script type="text/javascript">
+        window.addEventListener("load", function(){
+            const script = document.createElement('script');
+            script.src = "/api/proxy?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fayunami2000%2Feaglercraft%40master%2Fstable-download%2Fclasses.js&stealth=true";
+            script.onload = function() {
+                document.getElementById('loading').style.display = 'none';
+                const relayId = Math.floor(Math.random() * 3);
+                window.eaglercraftOpts = {
+                    container: "game_frame", 
+                    assetsURI: "/api/proxy?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fayunami2000%2Feaglercraft%40master%2Fstable-download%2Fassets.epk&stealth=true", 
+                    serverWorkerURI: "/api/proxy?url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fayunami2000%2Feaglercraft%40master%2Fstable-download%2Fworker_bootstrap.js&stealth=true", 
+                    worldsFolder: "MAIN",
+                    servers: [
+                        { serverName: "Ayunami Relay", serverAddress: "wss://relay.shhnowisnottheti.me/", hideAddress: false }
+                    ],
+                    relays: [
+                        { addr: "wss://relay.deev.is/", name: "lax1dude relay #1", primary: relayId == 0 },
+                        { addr: "wss://relay.lax1dude.net/", name: "lax1dude relay #2", primary: relayId == 1 },
+                        { addr: "wss://relay.shhnowisnottheti.me/", name: "ayunami relay #1", primary: relayId == 2 }
+                    ],
+                    mainMenu: { splashes: ["Relay Active", "AI Studio Mode", "Eaglercraft!"], eaglerLogo: false }
+                };
+                if (typeof main === 'function') {
+                    main();
+                } else {
+                    alert("Failed to initialize game classes. Please refresh.");
+                }
+            };
+            script.onerror = function() {
+                document.getElementById('loading').innerHTML = '<p style="color:red">Failed to load game assets. Check internet connection.</p>';
+            };
+            document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>

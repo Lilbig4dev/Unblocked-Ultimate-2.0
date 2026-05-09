@@ -10,7 +10,20 @@ import {
   signInWithEmailAndPassword,
   updateProfile
 } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  serverTimestamp,
+  increment,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs
+} from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
@@ -124,5 +137,31 @@ export async function updateUserProfile(uid, data) {
     });
   } catch (error) {
     handleFirestoreError(error, OperationType.UPDATE, `users/${uid}`);
+  }
+}
+
+export async function incrementPlayTime(uid, seconds) {
+  try {
+    await updateDoc(doc(db, 'users', uid), {
+      totalPlayTime: increment(seconds),
+      updatedAt: serverTimestamp(),
+    });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.UPDATE, `users/${uid}`);
+  }
+}
+
+export async function getLeaderboard(limitCount = 20) {
+  try {
+    const q = query(
+      collection(db, 'users'),
+      orderBy('totalPlayTime', 'desc'),
+      limit(limitCount)
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.LIST, 'users');
+    return [];
   }
 }

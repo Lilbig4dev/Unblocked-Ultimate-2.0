@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html style="cursor: auto;">
+<head>
+    <meta charset="UTF-8">
+    <title>Basket Random</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="generator" content="Construct 3">
+
+    <style>
+        body { background: #000; margin: 0; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        canvas { width: 100% !important; height: auto !important; max-height: 100vh !important; object-fit: contain; }
+    </style>
+
+    <script>
+      const BASE_URL = 'https://2048taylorswift.github.io/basketrandom/';
+      const proxy = (url) => `/api/proxy?url=${encodeURIComponent(new URL(url, BASE_URL).href)}&stealth=true`;
+
+      // Intercept fetch calls to proxy them
+      const originalFetch = window.fetch;
+      window.fetch = (input, init) => {
+          let url = typeof input === 'string' ? input : input.url;
+          if (!url.startsWith('data:') && !url.startsWith('blob:') && !url.includes(window.location.origin)) {
+              return originalFetch(proxy(url), init);
+          }
+          return originalFetch(input, init);
+      };
+
+      window.addEventListener(
+        "keydown",
+        function (e) {
+          if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+            e.preventDefault();
+          }
+        },
+        false
+      );
+    </script>
+
+    <!-- Load scripts via proxy -->
+    <script src="/api/proxy?url=https%3A%2F%2F2048taylorswift.github.io%2Fbasketrandom%2Fscripts%2Fc3runtime.js&stealth=true"></script>
+</head>
+<body>
+    <script>
+        // Dynamically load the relative scripts using the proxy
+        const scripts = [
+            'box2d.wasm.js',
+            'scripts/supportcheck.js',
+            'scripts/offlineclient.js',
+            'scripts/main.js'
+        ];
+
+        async function loadScripts() {
+            for (const s of scripts) {
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = proxy(s);
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.body.appendChild(script);
+                });
+            }
+        }
+        loadScripts();
+    </script>
+    
+    <noscript>
+      <div id="notSupportedWrap" style="color: white; text-align: center;">
+        <h2 id="notSupportedTitle">This content requires JavaScript</h2>
+        <p class="notSupportedMessage">
+          JavaScript appears to be disabled. Please enable it to view this content.
+        </p>
+      </div>
+    </noscript>
+</body>
+</html>

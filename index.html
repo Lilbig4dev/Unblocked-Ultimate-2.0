@@ -4,6 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UNBLOCKED ULTIMATE 2.0</title>
+    <script>
+      (function() {
+        // Aggressively suppress Vite WebSocket errors
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        const swallow = (msg) => {
+          if (!msg) return false;
+          const str = typeof msg === 'string' ? msg : (msg.message || String(msg));
+          if (str.includes('[vite] failed to connect to websocket') || 
+              str.includes('WebSocket closed without opened') ||
+              str.includes('connecting...')
+          ) return true;
+          return false;
+        };
+        console.error = function() { if (!swallow(arguments[0])) originalError.apply(console, arguments); };
+        console.warn = function() { if (!swallow(arguments[0])) originalWarn.apply(console, arguments); };
+        
+        // Prevent the unhandled rejection from being logged
+        window.addEventListener('unhandledrejection', function(event) {
+          if (event.reason && swallow(event.reason.message || event.reason)) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+          }
+        }, true);
+      })();
+    </script>
   </head>
   <body>
     <div id="root" style="background-color: #020205; min-height: 100vh;"></div>

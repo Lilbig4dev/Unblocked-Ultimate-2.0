@@ -65,32 +65,6 @@
     ]
   },
   {
-    "id": "talking-ben",
-    "title": "Talking Ben",
-    "description": "Have fun with Talking Ben, the retired chemistry professor who likes his quiet comfortable life.",
-    "thumbnail": "https://freeappsforme.com/wp-content/uploads/2020/10/Talking-Ben-1536x1497.jpg",
-    "iframeUrl": "/games/talking-ben/index.html",
-    "category": "simulator",
-    "tags": [
-      "talking",
-      "funny",
-      "simulator"
-    ]
-  },
-  {
-    "id": "geometry-dash",
-    "title": "Geometry Dash",
-    "description": "Jump and fly your way through danger in this rhythm-based action platformer!",
-    "thumbnail": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/322170/header.jpg",
-    "iframeUrl": "/games/geometry-dash/index.html",
-    "category": "action",
-    "tags": [
-      "rhythm",
-      "platformer",
-      "hard"
-    ]
-  },
-  {
     "id": "schoolboy-runaway",
     "title": "SchoolBoy Runaway",
     "description": "Try to escape from home and the watchful eyes of your parents in this stealth adventure.",
@@ -101,19 +75,6 @@
       "stealth",
       "escape",
       "unity"
-    ]
-  },
-  {
-    "id": "sonic-exe",
-    "title": "Sonic.exe",
-    "description": "A twisted version of the classic Sonic game. Face the horror of Sonic.exe.",
-    "thumbnail": "https://tse4.mm.bing.net/th/id/OIP.yxsrTlUMcWsmVD7HtFQCgwHaFO?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
-    "iframeUrl": "/games/sonic-exe/index.html",
-    "category": "horror",
-    "tags": [
-      "sonic",
-      "horror",
-      "creepypasta"
     ]
   },
   {
@@ -195,17 +156,31 @@
     ]
   },
   {
-    "id": "buckshot-roulette",
-    "title": "Buckshot Roulette",
-    "description": "Play Russian roulette with a 12-gauge shotgun. Enter the underground club and face the dealer.",
-    "thumbnail": "https://static0.hardcoregamerimages.com/wordpress/wp-content/uploads/sharedimages/2024/04/buckshot-roulette.jpg",
-    "iframeUrl": "/games/buckshot-roulette/index.html",
-    "category": "action",
-    "tags": [
-      "horror",
-      "luck",
-      "action"
-    ]
+    "id": "eaglercraft",
+    "title": "Eaglercraft",
+    "description": "Minecraft in your browser. Build, explore, and survive in this blocky world.",
+    "thumbnail": "https://www.minecraft.net/content/dam/games/minecraft/key-art/Minecraft_Key_Art_1.19_1200x675.jpg",
+    "iframeUrl": "<html style=\"width:100%;height:100%;background-color:black;\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0\"><title>EaglercraftX 1.8</title><script type=\"text/javascript\" src=\"/api/proxy?url=https%3A%2F%2Feaglercraft.app%2Fweb%2Fclasses.js&stealth=true\"></script><script type=\"text/javascript\">\"use strict\";window.addEventListener(\"load\", function() {var relayId = Math.floor(Math.random() * 3);window.eaglercraftXOpts = {demoMode: false,container: \"game_frame\",assetsURI: \"/api/proxy?url=https%3A%2F%2Feaglercraft.app%2Fweb%2Fassets.epk&stealth=true\",localesURI: \"/api/proxy?url=https%3A%2F%2Feaglercraft.app%2Fweb%2Flang%2F&stealth=true\",worldsDB: \"worlds\",servers: [{ addr: \"wss://eaglercraft.app/web/ws\", name: \"Clever Teaching\" }],relays: [{ addr: \"wss://relay.deev.is/\", comment: \"lax1dude relay #1\", primary: relayId == 0 },{ addr: \"wss://relay.lax1dude.net/\", comment: \"lax1dude relay #2\", primary: relayId == 1 },{ addr: \"wss://relay.shhnowisnottheti.me/\", comment: \"ayunami relay #1\", primary: relayId == 2 }]};if (typeof main === 'function') { main(); } else { console.error('Eaglercraft main not found'); }});</script></head><body style=\"margin:0px;width:100%;height:100%;overflow:hidden;background-color:black;\" id=\"game_frame\"></body></html>",
+    "category": "sandbox",
+    "tags": ["sandbox", "survival", "multiplayer"]
+  },
+  {
+    "id": "lookmovie",
+    "title": "LookMovie2",
+    "description": "Premium movie streaming experience. Bypass blocks with Scramjet Node-Relay.",
+    "thumbnail": "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&q=80",
+    "iframeUrl": "/api/proxy?url=https%3A%2F%2Fwww.lookmovie2.to&stealth=true",
+    "category": "app",
+    "tags": ["movies", "streaming", "media"]
+  },
+  {
+    "id": "basket-random",
+    "title": "Basket Random",
+    "description": "A fun, physics-based basketball game for 2 players. Anything can happen!",
+    "thumbnail": "https://tse2.mm.bing.net/th/id/OIP.UeX2G-U9vP0W0Zf7S3jVvwHaHa?rs=1&pid=ImgDetMain",
+    "iframeUrl": "/games/basket-random/index.html",
+    "category": "sports",
+    "tags": ["sports", "basketball", "physics", "multiplayer"]
   },
   {
     "id": "vice-city",

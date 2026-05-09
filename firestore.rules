@@ -41,12 +41,13 @@ service cloud.firestore {
              (data.get('displayName', null) == null || (data.get('displayName', null) is string && data.get('displayName', null).size() <= 100)) &&
              (data.get('username', null) == null || (data.get('username', null) is string && data.get('username', null).size() <= 64 && data.get('username', null).matches('^[a-zA-Z0-9_]+$'))) &&
              (data.get('password', null) == null || (data.get('password', null) is string && data.get('password', null).size() <= 128)) &&
-             (data.get('photoURL', null) == null || data.get('photoURL', null) is string);
+             (data.get('photoURL', null) == null || data.get('photoURL', null) is string) &&
+             (data.get('totalPlayTime', 0) is int || data.get('totalPlayTime', 0) is number);
     }
 
     match /users/{userId} {
       allow get: if isSignedIn();
-      allow list: if false;
+      allow list: if isSignedIn();
       
       allow create: if isOwner(userId) && 
                       isValidId(userId) && 
@@ -61,8 +62,8 @@ service cloud.firestore {
                       incoming().createdAt == existing().createdAt &&
                       incoming().updatedAt == request.time &&
                       (
-                        // Action: Complete profile (username/password/etc)
-                        incoming().diff(existing()).affectedKeys().hasOnly(['username', 'password', 'displayName', 'photoURL', 'updatedAt'])
+                        // Action: Complete profile or update play time
+                        incoming().diff(existing()).affectedKeys().hasOnly(['username', 'password', 'displayName', 'photoURL', 'updatedAt', 'totalPlayTime'])
                       );
     }
   }

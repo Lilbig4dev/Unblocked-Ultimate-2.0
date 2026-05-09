@@ -1,6 +1,5 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { motion } from "motion/react";
 import { Play } from "lucide-react";
 
@@ -12,38 +11,28 @@ export function GameCard({ game, onSelect }) {
       className="cursor-pointer"
       onClick={() => onSelect(game)}
     >
-      <Card className="overflow-hidden border-border bg-card transition-colors hover:border-primary/50 group">
-        <CardContent className="p-0 relative">
-          <AspectRatio ratio={16 / 9}>
-            <img
-              src={game.thumbnail}
-              alt={game.title}
-              className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-               <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-                  <Play className="text-primary-foreground fill-primary-foreground w-6 h-6 ml-1" />
-               </div>
-            </div>
-          </AspectRatio>
-        </CardContent>
-        <CardFooter className="p-4 flex flex-col items-start gap-2">
+      <Card className="overflow-hidden border-border bg-card transition-colors hover:border-primary/50 group h-full">
+        <CardContent className="p-4 flex flex-col items-start gap-2 relative h-full justify-between">
           <div className="flex justify-between items-center w-full">
-            <h3 className="font-bold text-lg leading-tight uppercase tracking-tight font-mono text-foreground">{game.title}</h3>
-            <Badge variant="outline" className="text-[10px] uppercase font-mono border-primary/30 text-primary">
+            <h3 className="font-bold text-lg leading-tight uppercase tracking-tight font-mono text-foreground group-hover:text-primary transition-colors">{game.title}</h3>
+            <Badge variant="outline" className="text-[10px] uppercase font-mono border-primary/30 text-primary shrink-0 ml-2">
               {game.category}
             </Badge>
           </div>
-          <p className="text-xs text-muted-foreground line-clamp-1">{game.description}</p>
-          <div className="flex gap-1 mt-1">
-            {game.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="text-[10px] text-muted-foreground font-mono">
-                #{tag}
-              </span>
-            ))}
+          <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{game.description}</p>
+          <div className="flex flex-wrap gap-2 mt-4 items-center w-full">
+            <div className="flex gap-2 flex-grow">
+              {game.tags.slice(0, 3).map((tag) => (
+                <span key={tag} className="text-[10px] text-muted-foreground font-mono">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-all shadow-sm">
+               <Play className="text-primary group-hover:text-primary-foreground fill-current w-4 h-4 ml-0.5" />
+            </div>
           </div>
-        </CardFooter>
+        </CardContent>
       </Card>
     </motion.div>
   );
